@@ -12,10 +12,10 @@ import { useRouter } from 'next/navigation'
 import { red } from '@mui/material/colors'
 import useRazorpay, { RazorpayOptions } from "react-razorpay";
 
-type Props = { updatable: boolean, component?: ReactElement,setStep?:Function }
+type Props = { updatable: boolean, component?: ReactElement, setStep?: Function }
 
-export default function CartPage({ updatable, component ,setStep}: Props) {
-  validate()
+export default function CartPage({ updatable, component, setStep }: Props) {
+
   const [Razorpay] = useRazorpay()
   const [cart, setcart] = useState<Cart>()
   const [messge, setmessge] = useState(false)
@@ -26,6 +26,10 @@ export default function CartPage({ updatable, component ,setStep}: Props) {
   }
   const auth: Auths = useAuth()
   const router = useRouter()
+  if (!auth.Auth) {
+    auth.setitemInCart(0)
+    router.push(`/user/authorization/signin`)
+  }
 
   useEffect(() => loadPage(), [])
   function loadPage() {
@@ -118,12 +122,12 @@ export default function CartPage({ updatable, component ,setStep}: Props) {
                               // redirect: false,
                               order_id: online,
                               handler: function (response) {
-                                const rsep:PaymentDetail = {
-                                  razorpayId:response.razorpay_order_id,
+                                const rsep: PaymentDetail = {
+                                  razorpayId: response.razorpay_order_id,
                                   razorpayPaymentId: response.razorpay_payment_id,
-                                  razorpayPaymentSignature:response.razorpay_signature
+                                  razorpayPaymentSignature: response.razorpay_signature
                                 }
-                                updateRazorpayPaymentInformation(order.id,rsep).then(response=>alert("Response has been saved")).catch(response=>console.log(response))
+                                updateRazorpayPaymentInformation(order.id, rsep).then(response => alert("Response has been saved")).catch(response => console.log(response))
                                 setStep(order.id)
                                 console.log(response)
                               },

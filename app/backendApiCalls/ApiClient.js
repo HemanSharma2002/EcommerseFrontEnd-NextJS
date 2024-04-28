@@ -8,7 +8,7 @@ const backend=axios.create(
 export function addTokenToBaseUrl(token){
     backend.interceptors.request.use((config)=>{
         config.headers.Authorization=token
-        // console.log(token)
+        // console.log(t0.
         return config
     })
 }

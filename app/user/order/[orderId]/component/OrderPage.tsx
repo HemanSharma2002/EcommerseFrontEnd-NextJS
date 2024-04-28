@@ -1,5 +1,5 @@
 "use client"
-import { Order, PaymentDetail, validate } from '@/app/admin/Interfaces/Interfaces'
+import { Order, PaymentDetail} from '@/app/admin/Interfaces/Interfaces'
 import { Auths, useAuth } from '@/app/auth/auth'
 import { getUserOrderById, initiateOnlinePayment, updateRazorpayPaymentInformation } from '@/app/backendApiCalls/api'
 import AddressCard from '@/app/cart/checkout/component/AddressCard'
@@ -9,7 +9,7 @@ import { Button, CircularProgress, dividerClasses, Step, StepConnector, stepConn
 import { Box, Check } from 'lucide-react'
 import { tree } from 'next/dist/build/templates/app-page'
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import useRazorpay, { RazorpayOptions } from 'react-razorpay'
 
@@ -76,7 +76,7 @@ function QontoStepIcon(props: StepIconProps) {
 type Props = { step?: number, checkout?: boolean }
 
 export default function OrderPage({ step, checkout }: Props) {
-  validate()
+
   console.log(step)
   const { orderId } = useParams()
   const [order, setorder] = useState<Order>()
@@ -85,6 +85,11 @@ export default function OrderPage({ step, checkout }: Props) {
   const [Razorpay] = useRazorpay()
   const auth: Auths = useAuth()
 
+  const router = useRouter()
+  if (!auth.Auth) {
+    auth.setitemInCart(0)
+    router.push(`/user/authorization/signin`)
+  }
 
   useEffect(() => loadPage(), [step])
   function loadPage() {
@@ -146,8 +151,8 @@ export default function OrderPage({ step, checkout }: Props) {
         {checkout && <div className='text-xl flex flex-row justify-center opacity-70'>
           <div className=' flex flex-row gap-2 bg-blue-950 text-white py-10 pl-8 rounded-sm'>
             <p>Your order has been placed</p>
-            <p><Box/></p>
-            <Link href={`/user/order`}><ArrowForward className=' mb-2 mx-10'/></Link>
+            <p><Box /></p>
+            <Link href={`/user/order`}><ArrowForward className=' mb-2 mx-10' /></Link>
           </div>
         </div>}
         <div>

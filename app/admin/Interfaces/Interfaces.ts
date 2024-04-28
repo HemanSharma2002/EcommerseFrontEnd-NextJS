@@ -106,18 +106,7 @@ export interface PaymentDetail {
     razorpayPaymentId: string
 }
 
-export function validate() {
-    const auth: Auths = useAuth()
-    const router = useRouter()
 
-    if (!auth.Auth) {
-        console.log(auth.Auth);
-
-        auth.setitemInCart(0)
-        router.push(`/user/authorization/signin`)
-    }
-
-}
 export const defaultTheme = createTheme({
     typography: {
         fontFamily: [

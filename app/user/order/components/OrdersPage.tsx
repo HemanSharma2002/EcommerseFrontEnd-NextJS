@@ -5,11 +5,13 @@ import { CircularProgress, Menu } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import OrderCard from './OrderCard'
 import { Box, BoxesIcon, ChevronDown, MenuIcon, Search } from 'lucide-react'
+import { Auths, useAuth } from '@/app/auth/auth'
+import { useRouter } from 'next/navigation'
 
 type Props = {}
 
 export default function OrdersPage({ }: Props) {
-  validate()
+
   const [ordersList, setordersList] = useState<Order[]>()
   const [search, setsearch] = useState("")
   const [menu, setmenu] = useState(false)
@@ -20,6 +22,12 @@ export default function OrdersPage({ }: Props) {
       setordersList(resp.data)
       // console.log(resp.data)
     }).catch(resp => resp)
+  }
+  const auth: Auths = useAuth()
+  const router = useRouter()
+  if (!auth.Auth) {
+    auth.setitemInCart(0)
+    router.push(`/user/authorization/signin`)
   }
   return (
     <div className=' w-full min-h-screen relative'>
@@ -54,7 +62,7 @@ export default function OrdersPage({ }: Props) {
           <div className=' p-2 flex flex-col gap-3' >
             {ordersList.map(order => (
               <div key={order.id}>
-                <OrderCard order={order} loadPage={loadPage}  />
+                <OrderCard order={order} loadPage={loadPage} />
               </div>
             ))}
           </div>

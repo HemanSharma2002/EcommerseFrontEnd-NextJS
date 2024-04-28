@@ -80,7 +80,7 @@ export default function ProductDetailSection({ product }: Props) {
                 {/* Images */}
                 <div className=' h-full  w-3/5  '>
                     <div className='w-full flex flex-row p-5  overflow-visible'>
-                        <div className='  w-2/5 h-[600px] overflow-scroll grid grid-cols justify-center gap-3 py-2'>
+                        <div className='  w-2/5 h-[600px] overflow-scroll hori grid grid-cols justify-center gap-3 py-2'>
                             {
                                 product.images.map(image => (
                                     <div className={` w-40 h-52 bg-white object object-scale-down ${selectedImage === image.imageUrl ? " border-2 border-blue-950" : " "}`}
