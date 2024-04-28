@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Head from "next/head";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import AuthorizationProvider from "./auth/AuthorizationProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +20,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet"></link>
+        <AuthorizationProvider>
+          <div>
+            <Header />
+            <div>
+              {children}
+            </div>
+            <Footer />
+          </div>
+        </AuthorizationProvider>
+      </body>
     </html>
   );
 }
