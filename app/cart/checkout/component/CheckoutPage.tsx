@@ -5,6 +5,8 @@ import ConfirmCheckout from './ConfirmCheckout'
 import { Button, Step, StepConnector, stepConnectorClasses, StepIconProps, StepLabel, Stepper, styled } from '@mui/material'
 import { Check } from '@mui/icons-material'
 import CompletedPage from '@/app/user/order/completed/[orderId]/component/CompletedPage'
+import { Auths, useAuth } from '@/app/auth/auth'
+import { useRouter } from 'next/navigation'
 
 const QontoConnector = styled(StepConnector)(({ theme }) => ({
     [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -70,6 +72,14 @@ const QontoConnector = styled(StepConnector)(({ theme }) => ({
 type Props = {}
 
 export default function CheckoutPage({}: Props) {
+  const auth: Auths = useAuth()
+  const router = useRouter()
+
+  if (!auth.Auth) {
+    auth.setitemInCart(0)
+    router.push(`/user/authorization/signin`)
+  }
+
     const [step, setstep] = useState(1)
     
   return (
