@@ -1,6 +1,6 @@
 "use client"
 import { Close } from '@mui/icons-material'
-import { Button, createTheme, FormControl, FormGroup, Input, InputLabel, Menu, MenuItem, Select, TextareaAutosize, ThemeProvider } from '@mui/material'
+import { Button, createTheme, FormControl, FormGroup, Input, InputLabel, Menu, MenuItem, Select, TextareaAutosize, TextField, ThemeProvider } from '@mui/material'
 import axios from 'axios'
 import React, { useState } from 'react'
 //@author Heman Sharma
@@ -142,7 +142,7 @@ export default function
                         ))
                     } */}
                         <div key={"addimage"} className='flex flex-row gap-6'>
-                            <Input type='file' placeholder='Image' onChange={e => setselectedImages(e.target.files[0])} />
+                            <input type='file' placeholder='Image' onChange={(e) => setselectedImages(e.target.files[0])} />
                             <Button onClick={async e => {
                                 e.preventDefault()
                                 if (selectedImage == null) {
