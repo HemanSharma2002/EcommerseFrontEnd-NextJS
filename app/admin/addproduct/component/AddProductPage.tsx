@@ -142,7 +142,12 @@ export default function
                         ))
                     } */}
                         <div key={"addimage"} className='flex flex-row gap-6'>
-                            <input type='file' placeholder='Image' onChange={(e) => setselectedImages(e.target.files[0])} />
+                            <input type='file' placeholder='Image' onChange={(e) => {
+                                if(e.target.files[0]){
+                                    setselectedImages(e.target.files[0])
+                                    return
+                                }
+                            }} />
                             <Button onClick={async e => {
                                 e.preventDefault()
                                 if (selectedImage == null) {
