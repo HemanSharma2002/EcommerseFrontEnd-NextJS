@@ -59,7 +59,7 @@ export default function
     const [thirdLevelCategory, setthirdLevelCategory] = useState("")
     const [pattern, setpattern] = useState("")
     const [quantity, setquantity] = useState("0")
-    const [img, setimg] = useState([])
+    const [img, setimg] = useState<String[]>([])
     const file=useRef<HTMLInputElement>()
     async function addProduct() {
 
@@ -144,8 +144,8 @@ export default function
                         ))
                     } */}
                         <div key={"addimage"} className='flex flex-row gap-6'>
-                            <input type='file' rel='' ref={file} placeholder='Image'  onChange={(e) => {
-                                if(e.target.files[0]){
+                            <input type='file' placeholder='Image'  onChange={(e) => {
+                                if(e!=null){
                                     setselectedImages(e.target.files[0])
                                     return
                                 }
@@ -160,10 +160,10 @@ export default function
                                 const fd = new FormData()
                                 fd.append("file", selectedImage)
                                 const data = await axios.post(`http://localhost:8085/api/save`, fd)
-                                const image = data.data[0]
+                                const image:string = data.data[0]
                                 setselectedImages(null)
                                 console.log(image)
-                                setimg([...img, image])
+                                setimg([...img,image])
                                 console.log(img)
                             }
                             }>Add Image</Button>
