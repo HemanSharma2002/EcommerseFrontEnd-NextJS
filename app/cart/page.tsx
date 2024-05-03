@@ -6,12 +6,12 @@ import { Cart } from '../admin/Interfaces/Interfaces'
 type Props = {}
 
 export default async function Page({}: Props) {
-  
+  function dummey(){
+    return 
+  }
   return (
     <div>
-        <CartPage updatable={true} setStep={()=>{
-          return
-        }} component={<p></p>}/>
+        <CartPage updatable={true} setStep={dummey} component={<p></p>}/>
     </div>
   )
 }
