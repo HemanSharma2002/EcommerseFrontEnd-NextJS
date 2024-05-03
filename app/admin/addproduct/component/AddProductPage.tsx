@@ -209,9 +209,9 @@ export default function AddProductPage ({ }: Props) {
                                 return
                             }
                             e.preventDefault()
-                            const size = {
+                            const size:Size = {
                                 name: selectedSize,
-                                quantity: selectedSizeQuantity
+                                quantity: Number(selectedSizeQuantity)
                             }
                             setSelectedSize("")
                             setSelectedSizeQuantity("")
@@ -294,7 +294,9 @@ export default function AddProductPage ({ }: Props) {
                         }
                     }}>Submitt</Button>
                 </FormGroup>
-
+                <div>
+                    
+                </div>
             </div>
         </ThemeProvider >
     )
