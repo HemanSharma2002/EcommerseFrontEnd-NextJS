@@ -5,6 +5,7 @@ import axios from 'axios'
 import { log } from 'console'
 import { BoxIcon } from 'lucide-react'
 import React, { useRef, useState } from 'react'
+import { nanoid } from 'nanoid'
 //@author Heman Sharma
 type Props = {}
 interface Size {
@@ -223,7 +224,7 @@ export default function AddProductPage ({ }: Props) {
                         <div className=' min-h-20 w-full border border-black flex flex-wrap gap-2 rounded-md border-opacity-25'>
                             {
                                 sizes.map(size => (
-                                    <div className='flex flex-row gap-3 m-1 pl-3 mx-2 h-min bg-slate-200 rounded-3xl' key={size.name}>
+                                    <div className='flex flex-row gap-3 m-1 pl-3 mx-2 h-min bg-slate-200 rounded-3xl' key={nanoid()}>
                                         <p>Size: {size.name}</p>
                                         <p>Quantity:{size.quantity}</p>
                                         <p onClick={e => {
