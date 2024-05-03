@@ -147,12 +147,14 @@ export default function AddProductPage ({ }: Props) {
                         <div key={"addimage"} className='flex flex-row gap-6'>
                             <input type='file'  onChange={(e) => {
                                 if(e!=null){
-                                    const image=e.target.files[0]
+                                    const image=e.target.files![0]
                                     setselectedImages(image)
                                     return
                                 }
                             }} />
-                            <p onClick={()=>file.current}><BoxIcon/></p>
+                            <div>
+                                
+                            </div>
                             <Button onClick={async e => {
                                 e.preventDefault()
                                 if (selectedImage == null) {
