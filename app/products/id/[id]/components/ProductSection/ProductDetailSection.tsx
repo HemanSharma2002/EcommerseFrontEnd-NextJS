@@ -75,6 +75,11 @@ export default function ProductDetailSection({ product }: Props) {
                 <p>/</p>
                 <p>{product.title}</p>
             </div>
+            <div>
+                <p>
+                    
+                </p>
+            </div>
             {/* Products Detail Section */}
             <div className=' min-h-screen w-full flex flex-row'>
                 {/* Images */}
@@ -85,14 +90,14 @@ export default function ProductDetailSection({ product }: Props) {
                                 product.images.map(image => (
                                     <div className={` w-40 h-52 bg-white object object-scale-down ${selectedImage === image.imageUrl ? " border-2 border-blue-950" : " "}`}
                                         onClick={() => setSelectedImage(image.imageUrl)}
-                                        key={image.id}>
-                                        <img className={` h-full w-full `} src={image.imageUrl} alt="" />
+                                        key={Number(image.id)}>
+                                        <img className={` h-full w-full `} src={String(image.imageUrl)} alt="" />
                                     </div>
                                 ))
                             }
                         </div>
                         <div className='  w-3/5 h-[600px] object object-scale-down'>
-                            <img className='w-full h-full' src={selectedImage ? selectedImage : product.images[0].imageUrl} alt="" />
+                            <img className='w-full h-full' src={selectedImage ? String(selectedImage) : String(product.images[0].imageUrl)} alt="" />
                         </div>
                     </div>
                 </div>
@@ -118,11 +123,11 @@ export default function ProductDetailSection({ product }: Props) {
                         <div className=' flex flex-wrap gap-4'>
                             {
                                 product.sizes.map(size => (
-                                    <div key={size.name}>
+                                    <div key={String(size.name)}>
                                         {<p className={` border-2 cursor-pointer border-blue-950 p-3 font-semibold text-blue-950  rounded-full ${size.name === selectedSize ? " bg-blue-950 text-white" : " hover:bg-blue-950 hover:text-white"}`}
                                             onClick={e => {
                                                 e.preventDefault()
-                                                setselectedSize(size.name)
+                                                setselectedSize(String(size.name))
                                                 setMessage("")
                                             }}
                                         >{size.name}</p>}
@@ -193,7 +198,7 @@ export default function ProductDetailSection({ product }: Props) {
                                     quantity: quantity
                                 }
                                 addToUserCart(object).then(resp => console.log(resp)).catch(resp => console.log(resp))
-                                auth.setitemInCart((prev) => prev + 1)
+                                auth.setitemInCart((prev:number) => prev + 1)
                                 setaddedTocart(!addedTocart)
                                 timeout()
                             }}>
