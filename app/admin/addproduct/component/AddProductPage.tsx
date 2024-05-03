@@ -152,9 +152,7 @@ export default function AddProductPage ({ }: Props) {
                                     return
                                 }
                             }} />
-                            <div>
-                                
-                            </div>
+                            
                             <Button onClick={async e => {
                                 e.preventDefault()
                                 if (selectedImage == null) {
@@ -165,7 +163,6 @@ export default function AddProductPage ({ }: Props) {
                                 fd.append("file", selectedImage)
                                 const data = await axios.post(`http://localhost:8085/api/save`, fd)
                                 const image:string = data.data[0]
-                                setselectedImages(null)
                                 console.log(image)
                                 setimg([...img,image])
                                 console.log(img)
@@ -175,8 +172,8 @@ export default function AddProductPage ({ }: Props) {
                         <div className=' w-full flex flex-wrap gap-3  p-2 border border-black border-opacity-20 rounded-md'>
                             {
                                 img.map(i => (
-                                    <div key={i} className='h-80 w-72 bg-red-200 object object-top rounded-md relative'>
-                                        <img src={i} alt="Add to Cart" className=' h-full w-full rounded-md' />
+                                    <div key={String(i)} className='h-80 w-72 bg-red-200 object object-top rounded-md relative'>
+                                        <img src={String(i)} alt="Add to Cart" className=' h-full w-full rounded-md' />
                                         <p className=' absolute top-2 right-2 bg-white rounded-md' onClick={e => {
                                             e.preventDefault()
                                             setimg(img.filter(img => img !== i))
