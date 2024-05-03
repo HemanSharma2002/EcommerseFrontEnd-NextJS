@@ -146,7 +146,7 @@ export default function CartPage({ updatable, component, setStep }: Props) {
                             console.log(options)
                             const rzp1 = new Razorpay(options)
 
-                            rzp1.on("payment.failed", function (response) {
+                            rzp1.on("payment.failed", function (response:any) {
                               alert(response.error.code);
                               alert(response.error.description);
                               alert(response.error.source);
@@ -167,6 +167,9 @@ export default function CartPage({ updatable, component, setStep }: Props) {
                       </Link>
                     </div>
                 }
+                <div>
+                  
+                </div>
                 {messge &&
                   <Alert className=' mt-5' icon={<Info fontSize="inherit" />} severity="info">
                     Add items to cart
