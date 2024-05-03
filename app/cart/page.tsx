@@ -1,17 +1,13 @@
 import React from 'react'
-import CartPage from './components/CartPage'
-import { getUserCart } from '../backendApiCalls/api'
-import { Cart } from '../admin/Interfaces/Interfaces'
+import CartMainPage from './components/CartMainPage'
 
 type Props = {}
 
-export default async function Page({}: Props) {
-  function dummey(){
-    return 
-  }
+export default async function Page({ }: Props) {
+
   return (
     <div>
-        <CartPage updatable={true} setStep={dummey} component={<p></p>}/>
+      <CartMainPage />
     </div>
   )
 }
