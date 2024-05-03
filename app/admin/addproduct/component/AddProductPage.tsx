@@ -1,8 +1,9 @@
 "use client"
 import { Close } from '@mui/icons-material'
-import { Button, createTheme, FormControl, FormGroup, Input, InputLabel, Menu, MenuItem, Select, TextareaAutosize, TextField, ThemeProvider } from '@mui/material'
+import { Box, Button, createTheme, FormControl, FormGroup, Input, InputLabel, Menu, MenuItem, Select, TextareaAutosize, TextField, ThemeProvider } from '@mui/material'
 import axios from 'axios'
-import React, { useState } from 'react'
+import { BoxIcon } from 'lucide-react'
+import React, { useRef, useState } from 'react'
 //@author Heman Sharma
 type Props = {}
 interface Size {
@@ -59,6 +60,7 @@ export default function
     const [pattern, setpattern] = useState("")
     const [quantity, setquantity] = useState("0")
     const [img, setimg] = useState([])
+    const file=useRef<HTMLInputElement>()
     async function addProduct() {
 
     }
@@ -142,12 +144,13 @@ export default function
                         ))
                     } */}
                         <div key={"addimage"} className='flex flex-row gap-6'>
-                            <input type='file' placeholder='Image' onChange={(e) => {
+                            <input type='file' rel='' ref={file} placeholder='Image'  onChange={(e) => {
                                 if(e.target.files[0]){
                                     setselectedImages(e.target.files[0])
                                     return
                                 }
                             }} />
+                            <p onClick={()=>file.current}><BoxIcon/></p>
                             <Button onClick={async e => {
                                 e.preventDefault()
                                 if (selectedImage == null) {

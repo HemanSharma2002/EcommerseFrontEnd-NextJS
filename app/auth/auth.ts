@@ -4,6 +4,7 @@ import { Cart } from "../admin/Interfaces/Interfaces";
 
 export interface User{
     username:string,
+    role:string,
     token:string,
     auth:boolean
 }

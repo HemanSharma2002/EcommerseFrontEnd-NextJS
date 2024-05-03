@@ -1,4 +1,3 @@
-
 "use client"
 import React, { ReactElement, useEffect, useState } from 'react'
 import { AuthorizatioContext, User } from './auth'
@@ -26,19 +25,27 @@ export default function AuthorizationProvider({ children }: Props) {
     const [user, setuser] = useState<User>({
         username: "",
         token: "",
-        auth: false
+        auth: false,
+        role:"ADMIN"
     })
-    const token = window.localStorage.getItem("Token")
-    const [Auth, setAuth] = useState((token==null||token==="")?false:true)
+    
+    const [Auth, setAuth] = useState(true)
     const [cart, setcart] = useState<Cart>()
     
     const router = useRouter()
     const [itemInCart, setitemInCart] = useState(0)
     useEffect( () => prefetchdata(),[])
      function prefetchdata() {
-        
+        const token = window.localStorage.getItem("Token")
         console.log(token)
         if (token ==null || token==="") {
+            setAuth(false)
+            const user: User = {
+                username: "",
+                token: "",
+                auth: false,role:"USER"
+            }
+            setuser(user)
             return
         }
         addTokenToBaseUrl(token)
@@ -49,9 +56,10 @@ export default function AuthorizationProvider({ children }: Props) {
                     // console.log(resp.data)
                     setAuth(auth=>true)
                     setuser({
-                        username: String(resp.data),
+                        username: String(resp.data.Username),
                         token: String(token),
-                        auth: true
+                        auth: true,
+                        role:String(resp.data.Role)
                     })
                   
 
@@ -65,7 +73,7 @@ export default function AuthorizationProvider({ children }: Props) {
         })
 
     }
-    function login(prop: UserLogin) {
+    async function login(prop: UserLogin) {
         removeTokenFromBaseUrl()
         const token = "Basic " + window.btoa(prop.email + ":" + prop.password)
         addTokenToBaseUrl(token)
@@ -73,9 +81,9 @@ export default function AuthorizationProvider({ children }: Props) {
             console.log(resp.data)
             removeTokenFromBaseUrl()
             const user: User = {
-                username: prop.email,
+                username: resp.data.Username,
                 token: "Bearer " + resp.data.token,
-                auth: true
+                auth: true,role:resp.data.Role
             }
             setuser(user)
             setAuth(true)
@@ -93,7 +101,7 @@ export default function AuthorizationProvider({ children }: Props) {
         const user: User = {
             username: "",
             token: "",
-            auth: false
+            auth: false,role:"USER"
         }
         setuser(user)
         setAuth(false)

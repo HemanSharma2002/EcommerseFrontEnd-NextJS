@@ -65,7 +65,7 @@ export default function ProductDetail({ }: Props) {
         <div className=' min-h-screen w-screen relative'>
             {product ? <div className='w-full pt-3'>
                 <ProductDetailSection product={product}/>
-                <RatingSection avgRating={product.avgRating} totalRating={product.totalRating} stastics={stastics}/>
+                {product.totalRating!=0&&<RatingSection avgRating={product.avgRating} totalRating={product.totalRating} stastics={stastics}/>}
             </div>
             :
             <CircularProgress className=' absolute left-1/2 top-1/2'   color="inherit"/>}

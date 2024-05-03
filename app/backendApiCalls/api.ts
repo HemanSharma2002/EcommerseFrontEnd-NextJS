@@ -1,4 +1,4 @@
-import { Address, PaymentDetail } from "../admin/Interfaces/Interfaces";
+import { Address, PaymentDetail, Product } from "../admin/Interfaces/Interfaces";
 import backend from "./ApiClient";
 interface Param {
     top: String,
@@ -33,3 +33,8 @@ export const getUserOrders=()=>backend.get(`user/order`)
 export const getUserOrderById=(orderId:Number)=>backend.get(`user/order/${orderId}`)
 export const initiateOnlinePayment=(orderId:number)=>backend.get(`/payment/${orderId}`)
 export const updateRazorpayPaymentInformation=(orderId:number,paymentInfo:PaymentDetail)=>backend.post(`/payment/${orderId}/razorpay-info`,paymentInfo)
+export const adminApigetAllOrder=(orderStatus:string,pageNo:number)=>backend.get(`/admin/order/${orderStatus}/${pageNo}`)
+export const adminApigetOrderById=(orderId:number)=>backend.get(`/admin/order/${orderId}`)
+export const adminApigetUsersData=(pageNo:number)=>backend.get(`/admin/user/${pageNo}`)
+export const adminApiupdateOrderStatus=(orderId:number,orderStatus:string)=>backend.put(`/admin/order/${orderId}/${orderStatus}`)
+export const adminApiupdateProduvtDetails=(product:Product)=>backend.put(`/admin/product/${product}`)
