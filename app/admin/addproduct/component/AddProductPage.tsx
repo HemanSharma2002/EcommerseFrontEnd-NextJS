@@ -2,6 +2,7 @@
 import { Close } from '@mui/icons-material'
 import { Box, Button, createTheme, FormControl, FormGroup, Input, InputLabel, Menu, MenuItem, Select, TextareaAutosize, TextField, ThemeProvider } from '@mui/material'
 import axios from 'axios'
+import { log } from 'console'
 import { BoxIcon } from 'lucide-react'
 import React, { useRef, useState } from 'react'
 //@author Heman Sharma
@@ -38,8 +39,7 @@ const defaultTheme = createTheme({
     }
 });
 
-export default function
-    ({ }: Props) {
+export default function AddProductPage ({ }: Props) {
     const [title, settitle] = useState("")
     const [brand, setbrand] = useState("")
     const [price, setprice] = useState("")
@@ -60,7 +60,6 @@ export default function
     const [pattern, setpattern] = useState("")
     const [quantity, setquantity] = useState("0")
     const [img, setimg] = useState<String[]>([])
-    const file=useRef<HTMLInputElement>()
     async function addProduct() {
 
     }
@@ -143,10 +142,13 @@ export default function
                             </FormControl>
                         ))
                     } */}
+                    <div>
+                    </div>
                         <div key={"addimage"} className='flex flex-row gap-6'>
-                            <input type='file' placeholder='Image'  onChange={(e) => {
+                            <input type='file'  onChange={(e) => {
                                 if(e!=null){
-                                    setselectedImages(e.target.files[0])
+                                    const image=e.target.files[0]
+                                    setselectedImages(image)
                                     return
                                 }
                             }} />
