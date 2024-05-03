@@ -1,5 +1,5 @@
 "use client"
-import { Order, validate } from '@/app/admin/Interfaces/Interfaces'
+import { Order} from '@/app/admin/Interfaces/Interfaces'
 import { getUserOrders } from '@/app/backendApiCalls/api'
 import { CircularProgress, Menu } from '@mui/material'
 import React, { useEffect, useState } from 'react'
@@ -62,7 +62,7 @@ export default function OrdersPage({ }: Props) {
           <div className=' p-2 flex flex-col gap-3' >
             {ordersList.map(order => (
               <div key={order.id}>
-                <OrderCard order={order} loadPage={loadPage} />
+                <OrderCard order={order} loadPage={loadPage} admin={false} />
               </div>
             ))}
           </div>

@@ -12,7 +12,7 @@ export default function ProductCard({ product }: Props) {
             <Link href={`/products/id/${product.id}`}>
                 <div className='w-72  h-[450px] bg-white  text-blue-950 group'>
                     <div className=' w-full h-[300px]   group-hover:h-[280px] duration-300  '>
-                        <img className='h-full w-full object-cover  object-top ' src={product.images[0].imageUrl} alt="" />
+                        <img className='h-full w-full object-cover  object-top ' src={String(product.images[0].imageUrl)} alt="" />
                     </div>
                     <div className=' p-2'>
                         <p className=' text-xl'>{product.brand}</p>

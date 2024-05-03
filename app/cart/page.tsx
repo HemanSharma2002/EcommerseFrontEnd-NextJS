@@ -9,7 +9,9 @@ export default async function Page({}: Props) {
   
   return (
     <div>
-        <CartPage updatable={true}/>
+        <CartPage updatable={true} setStep={()=>{
+          return
+        }} component={<p></p>}/>
     </div>
   )
 }

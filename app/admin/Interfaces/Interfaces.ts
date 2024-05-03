@@ -79,7 +79,8 @@ export interface OrderItem {
     dicountedPrice: number,
     userId: number,
     deliveryDate: Date,
-    product: Product
+    product: Product,
+    totalDiscount:number
 
 }
 export interface Order {

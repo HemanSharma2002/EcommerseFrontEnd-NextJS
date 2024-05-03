@@ -21,6 +21,7 @@ import { getProductsBySecondLevelCategory, getProductsByThirdLevelCategory, getP
 interface Page {
   content: Product[]
   , totalPages: number
+  ,totalElements:number
 }
 
 interface Param {
@@ -33,7 +34,7 @@ type Props = {}
 
 export default function ProductPage({ }: Props) {
   const router = useRouter()
-  const param = useParams()
+  const param= useParams()
   const [color, setcolor] = useState<String[]>([])
   const [pattern, setpattern] = useState<String[]>([])
   const [menu, setmenu] = useState(false)

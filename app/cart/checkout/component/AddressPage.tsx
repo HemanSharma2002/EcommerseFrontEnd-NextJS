@@ -39,7 +39,7 @@ export default function AddressPage({ setStep}: Props) {
             <div className=' w-1/4 h-[720px] p-2 overflow-scroll'>
                 {activeAddress?
                 <div className=' border-2 border-blue-950' onClick={()=>setStep(2)}>
-                <AddressCard updatable={false} address={activeAddress} load={loadPage} step={setStep}/>
+                <AddressCard updatable={false} address={activeAddress} loadPage={loadPage} setStep={setStep}/>
                 </div>
             :
             <div className=' h-48 w-full flex justify-center items-center text-xl shadow-md  gap-2 mb-2'>   <LocationCity/> <p>Add Address</p></div>
@@ -48,7 +48,7 @@ export default function AddressPage({ setStep}: Props) {
                     {
                         address?.map(ad=>(
                             <div key={ad.id}>
-                                <AddressCard updatable={true} address={ad} load={loadPage} step={setStep}/>
+                                <AddressCard updatable={true} address={ad} loadPage={loadPage} setStep={setStep}/>
                             </div>
                         ))
                     }

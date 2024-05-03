@@ -1,4 +1,4 @@
-import { CartItem } from '@/app/admin/Interfaces/Interfaces'
+import { CartItem, OrderItem } from '@/app/admin/Interfaces/Interfaces'
 import { deleteCartItem, updateCartItem } from '@/app/backendApiCalls/api'
 import { Delete } from '@mui/icons-material'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
@@ -7,14 +7,14 @@ import { MinusCircle, PlusCircle } from 'lucide-react'
 import Link from 'next/link'
 import React, { useState } from 'react'
 
-type Props = { cartItem: CartItem, loadpage?: Function, updatable: boolean }
+type Props = { cartItem: CartItem|OrderItem, loadpage: Function, updatable: boolean }
 
 export default function CartCard({ cartItem, loadpage, updatable }: Props) {
   const [quantity, setquantity] = useState(cartItem.quantity)
   return (
     <div className='h-52 flex flex-row  mx-2 shadow-xl'>
       <Link href={`/products/id/${cartItem.product.id}`} className=' h-full w-44 bg-red-200 object obj'>
-        <img className='h-full w-full ' src={cartItem.product.images[0].imageUrl} alt={cartItem.product.id} />
+        <img className='h-full w-full ' src={String(cartItem.product.images[0].imageUrl)} alt={String(cartItem.product.id)} />
       </Link>
       <div className=' p-3 flex flex-col gap-1 relative w-full'>
         <p className='text-xl'>{cartItem.product.brand}</p>

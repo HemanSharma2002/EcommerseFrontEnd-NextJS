@@ -15,6 +15,20 @@ export interface Auths{
     Auth:boolean,itemInCart:number,setitemInCart:Function,prefetchdata:Function
     
 }
-export const AuthorizatioContext=createContext();
-export const useAuth=()=>useContext(AuthorizatioContext);
+export const AuthorizatioContext=createContext<Auths>({
+    login:()=>{},
+    logout:()=>{},
+    user:{
+        username:"",
+        role:"Admin",
+        token:"",
+        auth:true
+    },
+    Auth:true,
+    itemInCart:0,
+    setitemInCart:()=>{},
+    prefetchdata:()=>{}
+
+});
+export const useAuth=():Auths=>useContext(AuthorizatioContext);
 

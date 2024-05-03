@@ -3,9 +3,9 @@ import { deleteAddress, setActiveAddress } from '@/app/backendApiCalls/api'
 import { Call, Delete } from '@mui/icons-material'
 import React from 'react'
 
-type Props = { updatable: boolean, address: Address,load?:Function,step?:Function }
+type Props = { updatable: boolean, address: Address,loadPage:Function,setStep:Function }
 
-export default function AddressCard({ updatable, address,load,step }: Props) {
+export default function AddressCard({ updatable, address,loadPage,setStep }: Props) {
   return (
     <div className=' w-full 0 h-48 p-3 flex flex-col gap-2 text-blue-950 shadow-xl'>
       <div className=' flex flex-row justify-between'>
@@ -14,9 +14,9 @@ export default function AddressCard({ updatable, address,load,step }: Props) {
           <p>{address.lastName}</p>
         </div>
         {updatable&&<p  className=' px-2 mx-2 py-1 text-sm mt-1 hover:bg-blue-950 hover:text-white cursor-pointer rounded-md' onClick={async()=>{
-          await setActiveAddress(address.id).then(resp=>{
+          await setActiveAddress(String(address.id)).then(resp=>{
             if(resp.data!=null){
-              step(2)
+              setStep(2)
             }
           }).catch(resp=>console.log(resp))
 
@@ -42,8 +42,8 @@ export default function AddressCard({ updatable, address,load,step }: Props) {
         {updatable && <div>
           <button onClick={async(e)=>{
             e.preventDefault()
-            await deleteAddress(address.id).then(resp=>console.log(resp)).catch(resp=>console.log(resp))
-            load()
+            await deleteAddress(String(address.id)).then(resp=>console.log(resp)).catch(resp=>console.log(resp))
+            loadPage()
           }}><Delete /></button>
         </div>}
       </div>

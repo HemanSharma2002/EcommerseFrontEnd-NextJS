@@ -1,5 +1,5 @@
 "use client"
-import { Cart, defaultTheme, Order, PaymentDetail, validate } from '@/app/admin/Interfaces/Interfaces'
+import { Cart, defaultTheme, Order, PaymentDetail } from '@/app/admin/Interfaces/Interfaces'
 import { createOrder, getActiveAddress, getUserCart, initiateOnlinePayment, updateRazorpayPaymentInformation } from '@/app/backendApiCalls/api'
 import { Alert, Button, CircularProgress, FormControl, InputLabel, MenuItem, Select, ThemeProvider } from '@mui/material'
 import axios from 'axios'
@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation'
 import { red } from '@mui/material/colors'
 import useRazorpay, { RazorpayOptions } from "react-razorpay";
 
-type Props = { updatable: boolean, component?: ReactElement, setStep?: Function }
+type Props = { updatable: boolean, component?: ReactElement, setStep: Function }
 
 export default function CartPage({ updatable, component, setStep }: Props) {
 

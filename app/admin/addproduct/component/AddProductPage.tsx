@@ -238,6 +238,7 @@ export default function AddProductPage ({ }: Props) {
                                 ))
                             }
                         </div>
+                        <div></div>
                     </div>
                     <FormControl fullWidth >
                         <InputLabel >Top Level Category</InputLabel>
@@ -295,9 +296,6 @@ export default function AddProductPage ({ }: Props) {
                         }
                     }}>Submitt</Button>
                 </FormGroup>
-                <div>
-                    
-                </div>
             </div>
         </ThemeProvider >
     )

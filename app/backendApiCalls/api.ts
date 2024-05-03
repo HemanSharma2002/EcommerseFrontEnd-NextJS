@@ -1,3 +1,4 @@
+import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { Address, PaymentDetail, Product } from "../admin/Interfaces/Interfaces";
 import backend from "./ApiClient";
 interface Param {
@@ -8,11 +9,11 @@ interface Param {
 }
 
 
-export const getProductsByThirdLevelCategory = (param: Param, obj: unknown, pageno: unknown,) => backend.put(`/api/products/${param.top}/${param.second}/${param.third}/${pageno}`, obj)
-export const getProductsBySecondLevelCategory = (param: Param, obj: unknown, pageno: unknown,) => backend.put(`/api/products/${param.top}/${param.second}/${pageno}`, obj)
-export const getProductsByTopLevelCategory = (param: Param, obj: unknown, pageno: unknown,) => backend.put(`/api/products/${param.top}/${pageno}`, obj)
-export const getProductsById = (param: Param) => backend.get(`/api/products/id/${param.id}`)
-export const getProductsRatingStasticsById = (param: Param) => backend.get(`/api/products/ratings/stats/${param.id}`)
+export const getProductsByThirdLevelCategory = (param: Params, obj: unknown, pageno: unknown,) => backend.put(`/api/products/${param.top}/${param.second}/${param.third}/${pageno}`, obj)
+export const getProductsBySecondLevelCategory = (param: Params, obj: unknown, pageno: unknown,) => backend.put(`/api/products/${param.top}/${param.second}/${pageno}`, obj)
+export const getProductsByTopLevelCategory = (param: Params, obj: unknown, pageno: unknown,) => backend.put(`/api/products/${param.top}/${pageno}`, obj)
+export const getProductsById = (id:number) => backend.get(`/api/products/id/${id}`)
+export const getProductsRatingStasticsById = (id:number) => backend.get(`/api/products/ratings/stats/${id}`)
 export const getProductsRatingsById = (id: String) => backend.get(`/api/products/ratings/${id}`)
 export const loginApi = () => backend.post(`/login`)
 export const confirmLoginStatus=()=>backend.post(`/login-status`)

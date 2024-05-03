@@ -54,11 +54,11 @@ export default function ProductDetail({ }: Props) {
 
     const param = useParams()
     const [product, setproduct] = useState<Product>()
-    const [stastics, setstastics] = useState<unknown>()
+    const [stastics, setstastics] = useState<[String []]>([[]])
     useEffect(() => loadPage(), [param.id])
     function loadPage() {
-        getProductsById(param).then(resp => setproduct(resp.data)).catch(err => console.log(err))
-        getProductsRatingStasticsById(param).then(resp => setstastics(resp.data)).catch(err => console.log(err))
+        getProductsById(Number(param.id)).then(resp => setproduct(resp.data)).catch(err => console.log(err))
+        getProductsRatingStasticsById(Number(param.id)).then(resp => setstastics(resp.data)).catch(err => console.log(err))
     }
     
     return (

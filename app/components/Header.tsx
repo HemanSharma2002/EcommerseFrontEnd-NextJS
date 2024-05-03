@@ -16,7 +16,7 @@ import { LocalMall, Search, ShoppingBagRounded } from '@mui/icons-material'
 import Link from 'next/link'
 import { Auths, useAuth } from '../auth/auth'
 import { getAllCategoryApi, getUserCart } from '../backendApiCalls/api'
-import { Cart, validate } from '../admin/Interfaces/Interfaces'
+import { Cart } from '../admin/Interfaces/Interfaces'
 import { ShoppingBag } from 'lucide-react'
 
 type Props = {}

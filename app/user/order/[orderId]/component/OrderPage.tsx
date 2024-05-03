@@ -73,7 +73,7 @@ function QontoStepIcon(props: StepIconProps) {
   );
 }
 
-type Props = { step?: number, checkout?: boolean }
+type Props = { step: number, checkout: boolean }
 
 export default function OrderPage({ step, checkout }: Props) {
 
@@ -195,7 +195,7 @@ export default function OrderPage({ step, checkout }: Props) {
                 console.log(options)
                 const rzp1 = new Razorpay(options)
 
-                rzp1.on("payment.failed", function (response) {
+                rzp1.on("payment.failed", function (response:any) {
                   alert(response.error.code);
                   alert(response.error.description);
                   alert(response.error.source);
@@ -240,7 +240,7 @@ export default function OrderPage({ step, checkout }: Props) {
             {
               order.orderItems.map(item => (
                 <div key={item.id}>
-                  <CartCard cartItem={item} updatable={false} />
+                  <CartCard cartItem={item} updatable={false}  loadpage={loadPage} />
                 </div>
               ))
             }

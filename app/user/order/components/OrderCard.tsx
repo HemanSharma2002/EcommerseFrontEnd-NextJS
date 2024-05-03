@@ -6,7 +6,7 @@ import Link from 'next/link'
 import React from 'react'
 import useRazorpay, { RazorpayOptions } from 'react-razorpay'
 
-type Props = { order: Order, loadPage?: Function, admin?: boolean }
+type Props = { order: Order, loadPage: Function, admin: boolean }
 
 export default function OrderCard({ order, loadPage, admin }: Props) {
     const [Razorpay] = useRazorpay()
@@ -74,7 +74,7 @@ export default function OrderCard({ order, loadPage, admin }: Props) {
                                                     console.log(options)
                                                     const rzp1 = new Razorpay(options)
 
-                                                    rzp1.on("payment.failed", function (response) {
+                                                    rzp1.on("payment.failed", function (response:any) {
                                                         alert(response.error.code);
                                                         alert(response.error.description);
                                                         alert(response.error.source);
@@ -116,7 +116,7 @@ export default function OrderCard({ order, loadPage, admin }: Props) {
                         {order.orderItems.map(item => (
                             <div key={item.id} className=' bg-gray-100  h-full w-[150px] flex flex-col items-center rounded-md'>
                                 <div className=' h-24 w-24  object object-contain object-center'>
-                                    < img className='h-full w-fill ' src={item.product.images[0].imageUrl} alt="" />
+                                    < img className='h-full w-fill ' src={String(item.product.images[0].imageUrl)} alt="" />
                                 </div>
                                 <div className='p-1'>
                                     <p>{item.product.brand}</p>

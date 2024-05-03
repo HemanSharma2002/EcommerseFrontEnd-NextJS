@@ -5,6 +5,6 @@ type Props = {}
 
 export default function page({}: Props) {
   return (
-    <div><OrderPage/></div>
+    <div><OrderPage step={0} checkout={false}/></div>
   )
 }

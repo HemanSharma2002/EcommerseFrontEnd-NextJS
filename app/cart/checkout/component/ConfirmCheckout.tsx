@@ -12,10 +12,13 @@ export default function ConfirmCheckout({setStep }: Props) {
     useEffect(() => {
         getActiveAddress().then(resp => setaddress(resp.data)).catch(resp => console.log(resp))
     }, [])
+    function dummey(){
+        return
+    }
     return (
         <div>
             <div className='px-3 text-blue-950' onClick={()=>setStep(1)}><ArrowBack/></div>
-            <CartPage updatable={false} setStep={setStep} component={address ? <AddressCard address={address} updatable={false}   /> : <p></p>} />
+            <CartPage updatable={false} setStep={setStep} component={address ? <AddressCard address={address} updatable={false} loadPage={dummey} setStep={dummey}   /> : <p></p>} />
         </div>
     )
 }

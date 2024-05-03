@@ -60,17 +60,22 @@ const rating: Rating = {
   review: "Great Product",
   username: "Heman Sharma"
 }
+interface Data{
+  id:number,
+  value:number,
+  label:string
+}
 
 export default function RatingSection({ avgRating, totalRating, stastics }: Props) {
   const{id}=useParams()
   const [ratings, setratings] = useState<Rating[]>([])
   const [ratingMenu, setratingMenu] = useState(false)
-  let data = []
+  let data:Data[] = []
   if (stastics) {
     stastics.map(element => {
-      const obj = {
-        id: element[0],
-        value: element[1],
+      const obj:Data = {
+        id: Number(element[0]),
+        value: Number(element[1]),
         label: `${element[0]}  Star`
       }
       data.push(obj)
@@ -90,11 +95,11 @@ export default function RatingSection({ avgRating, totalRating, stastics }: Prop
             <div className='flex flex-row gap-3 p-2'>
               <div className='flex flex-row gap-3'>
                 <p>Total Ratings :</p>
-                <p>{totalRating}</p>
+                <p>{String(totalRating)}</p>
               </div>
               <div className='flex flex-row gap-3'>
                 <p>Avg Rating :</p>
-                <p>{avgRating}</p>
+                <p>{String(avgRating)}</p>
               </div>
             </div>
             <div className='bg-white rounded-md'>
