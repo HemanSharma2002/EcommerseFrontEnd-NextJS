@@ -1,5 +1,5 @@
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
-import { Address, PaymentDetail, Product } from "../admin/Interfaces/Interfaces";
+import { Address, PaymentDetail, Product, Rating, Ratting } from "../admin/Interfaces/Interfaces";
 import backend from "./ApiClient";
 interface Param {
     top: String,
@@ -10,8 +10,8 @@ interface Param {
 
 
 export const getProductsByThirdLevelCategory = (param: Params, obj: unknown, pageno: unknown,) => backend.put(`/api/products/${param.top}/${param.second}/${param.third}/${pageno}`, obj)
-export const getProductsBySecondLevelCategory = (param: Params, obj: unknown, pageno: unknown,) => backend.put(`/api/products/${param.top}/${param.second}/${pageno}`, obj)
-export const getProductsByTopLevelCategory = (param: Params, obj: unknown, pageno: unknown,) => backend.put(`/api/products/${param.top}/${pageno}`, obj)
+export const getProductsBySecondLevelCategory = (param: any, obj: unknown, pageno: unknown,) => backend.put(`/api/products/${param.top}/${param.second}/${pageno}`, obj)
+export const getProductsByTopLevelCategory = (param: any, obj: unknown, pageno: unknown,) => backend.put(`/api/products/${param.top}/${pageno}`, obj)
 export const getProductsById = (id:number) => backend.get(`/api/products/id/${id}`)
 export const getProductsRatingStasticsById = (id:number) => backend.get(`/api/products/ratings/stats/${id}`)
 export const getProductsRatingsById = (id: String) => backend.get(`/api/products/ratings/${id}`)
@@ -39,3 +39,10 @@ export const adminApigetOrderById=(orderId:number)=>backend.get(`/admin/order/${
 export const adminApigetUsersData=(pageNo:number)=>backend.get(`/admin/user/${pageNo}`)
 export const adminApiupdateOrderStatus=(orderId:number,orderStatus:string)=>backend.put(`/admin/order/${orderId}/${orderStatus}`)
 export const adminApiupdateProduvtDetails=(product:Product)=>backend.put(`/admin/product/${product}`)
+export const addReviewToTheProduct=(productId:number,orderId:number,rating:Ratting)=>backend.post(`/products/${productId}/${orderId}/rating`,rating)
+export const verifyOtpApi=(userId:number,otp:string)=>backend.post(`/verify/${userId}`,null,{
+    params:{
+        otp
+    }
+})
+export const resendOtpApi=(userId:number)=>backend.get(`/resend-otp/${userId}`)

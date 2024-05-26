@@ -4,7 +4,8 @@ import axios from 'axios'
 import { addToUserCart } from '@/app/backendApiCalls/api'
 import { Auths, useAuth } from '@/app/auth/auth'
 import { useRouter } from 'next/navigation'
-import { ShoppingBagIcon } from 'lucide-react'
+import { LucideBoxSelect, ShoppingBagIcon } from 'lucide-react'
+import Link from 'next/link'
 interface Size {
     id: Number,
     name: String,
@@ -47,9 +48,9 @@ interface Product {
     category: Category
 }
 
-type Props = { product: Product }
+type Props = { product: Product, isAdmin?: boolean }
 
-export default function ProductDetailSection({ product }: Props) {
+export default function ProductDetailSection({ product, isAdmin }: Props) {
     const router = useRouter()
 
     const [selectedSize, setselectedSize] = useState("")
@@ -58,8 +59,8 @@ export default function ProductDetailSection({ product }: Props) {
     const [quantity, setquantity] = useState<number>(1)
     const [addedTocart, setaddedTocart] = useState(false)
     const auth: Auths = useAuth()
-    function timeout(){
-        setTimeout(()=>setaddedTocart(false),3000)
+    function timeout() {
+        setTimeout(() => setaddedTocart(false), 3000)
     }
     const [selectedImage, setSelectedImage] = useState(product?.images[0].imageUrl)
     return (
@@ -77,7 +78,7 @@ export default function ProductDetailSection({ product }: Props) {
             </div>
             <div>
                 <p>
-                    
+
                 </p>
             </div>
             {/* Products Detail Section */}
@@ -182,13 +183,13 @@ export default function ProductDetailSection({ product }: Props) {
                                 </div>
                             }
                         </div>
-                        <div className='flex flex-col items-center w-3/5 text-center'>
+                        {!isAdmin ? <div className='flex flex-col items-center w-3/5 text-center'>
                             {!addedTocart ? <button className='flex flex-row gap-2 py-2 px-8 border-2 w-full justify-center bg-blue-950 text-white font-bold' onClick={async () => {
-                                if(!auth.Auth){
+                                if (!auth.Auth) {
                                     router.push(`/user/authorization/signin`)
                                     return
                                 }
-                                if(selectedSize===""){
+                                if (selectedSize === "") {
                                     setMessage("Select size !!")
                                     return
                                 }
@@ -198,7 +199,7 @@ export default function ProductDetailSection({ product }: Props) {
                                     quantity: quantity
                                 }
                                 addToUserCart(object).then(resp => console.log(resp)).catch(resp => console.log(resp))
-                                auth.setitemInCart((prev:number) => prev + 1)
+                                auth.setitemInCart((prev: number) => prev + 1)
                                 setaddedTocart(!addedTocart)
                                 timeout()
                             }}>
@@ -207,14 +208,19 @@ export default function ProductDetailSection({ product }: Props) {
                             </button> :
                                 <button className='flex flex-row gap-2 py-2 px-8 border-2 w-full justify-center bg-blue-950 text-white font-bold' onClick={async () => {
                                     setaddedTocart(!addedTocart)
-                                    
-                                    
+
+
                                 }}>
                                     <Done />
                                     <p>Product Added</p>
                                 </button>}
                             <p className='text-sm'>HANDPICKED STYLES | ASSURED QUALITY </p>
                         </div>
+                            :
+                            <div>
+
+                            </div>
+                        }
                         <div>
                             <div className='text-start mx-5 font-semibold py-2'>Product Details</div>
                             <ul className='text-start mx-10 flex flex-col gap-2 text-sm'>
@@ -230,6 +236,16 @@ export default function ProductDetailSection({ product }: Props) {
                     </div>
                 </div>
             </div>
+            {isAdmin &&
+                <div className=' px-10 rounded-lg '>
+                    <Link href={`/admin/addproduct`} >
+                        <button className='flex flex-row gap-2 py-2 px-8 border-2 w-full rounded-lg justify-center bg-blue-950 text-white font-bold'>
+                            <LucideBoxSelect />
+                            <p>Add more products</p>
+                        </button>
+                    </Link>
+                </div>
+            }
         </div>
     )
 }

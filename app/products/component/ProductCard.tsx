@@ -8,7 +8,7 @@ type Props = {
 
 export default function ProductCard({ product }: Props) {
     return (
-        <div className=' border-2 border-blue-950' key={Number(product.id)}>
+        <div className='  border-2 border-blue-950' key={Number(product.id)}>
             <Link href={`/products/id/${product.id}`}>
                 <div className='w-72  h-[450px] bg-white  text-blue-950 group'>
                     <div className=' w-full h-[300px]   group-hover:h-[280px] duration-300  '>

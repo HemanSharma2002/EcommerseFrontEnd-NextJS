@@ -8,6 +8,7 @@ import { Cart } from '../admin/Interfaces/Interfaces'
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import Cookies from 'universal-cookie';
 import path from 'path'
+import { useToast } from '@/components/ui/use-toast'
 
 type Props = {
     children: ReactElement
@@ -24,6 +25,7 @@ export default function AuthorizationProvider({ children }: Props) {
 
     const [user, setuser] = useState<User>({
         username: "",
+        name:"",
         token: "",
         auth: false,
         role:"ADMIN"
@@ -31,24 +33,27 @@ export default function AuthorizationProvider({ children }: Props) {
     
     const [Auth, setAuth] = useState(true)
     const [cart, setcart] = useState<Cart>()
-    
+    const {toast}=useToast()
     const router = useRouter()
     const [itemInCart, setitemInCart] = useState(0)
+    const cookies=new Cookies();
     useEffect( () => prefetchdata(),[])
      function prefetchdata() {
-        const token = window.localStorage.getItem("Token")
-        console.log(token)
+        // const token = window.localStorage.getItem("Token")
+        const token=cookies.get("_spring_jwt")
         if (token ==null || token==="") {
             setAuth(false)
             const user: User = {
                 username: "",
+                name:"",
                 token: "",
-                auth: false,role:"USER"
+                auth: false,
+                role:"USER"
             }
             setuser(user)
             return
         }
-        addTokenToBaseUrl(token)
+        addTokenToBaseUrl("Bearer "+token)
          confirmLoginStatus().then(resp => {
             // console.log(resp.data)
             if (resp.data) {
@@ -56,10 +61,15 @@ export default function AuthorizationProvider({ children }: Props) {
                     // console.log(resp.data)
                     setAuth(auth=>true)
                     setuser({
-                        username: String(resp.data.Username),
+                        username: String(resp.data.username),
+                        name:resp.data.firstName+" "+resp.data.lastname,
                         token: String(token),
                         auth: true,
                         role:String(resp.data.Role)
+                    })
+                    toast({
+                        title:"Welcome",
+                        description:`Hi ${resp.data.firstName+" "+resp.data.lastname}`
                     })
                   
 
@@ -68,7 +78,8 @@ export default function AuthorizationProvider({ children }: Props) {
             }  
         }).catch(resp => {
             removeTokenFromBaseUrl()
-            window.localStorage.setItem("Token", "")
+            cookies.remove("_spring_jwt")
+            // window.localStorage.setItem("Token", "")
             router.push(`/user/authorization/signin`)
         })
 
@@ -81,14 +92,24 @@ export default function AuthorizationProvider({ children }: Props) {
             console.log(resp.data)
             removeTokenFromBaseUrl()
             const user: User = {
-                username: resp.data.Username,
+                username: resp.data.username,
+                name:resp.data.firstName+" "+resp.data.lastName,
                 token: "Bearer " + resp.data.token,
                 auth: true,role:resp.data.Role
             }
+            toast({
+                title:"Welcome",
+                description:`Hi ${resp.data.firstName+" "+resp.data.lastName}`
+            })
             setuser(user)
             setAuth(true)
             addTokenToBaseUrl("Bearer " + resp.data.token)
-            window.localStorage.setItem("Token", "Bearer " + resp.data.token)
+            // window.localStorage.setItem("Token", "Bearer " + resp.data.token)
+            const token=resp.data.token
+            const decode=jwtDecode(token)
+            cookies.set("_spring_jwt",token,{
+                expires:new Date(decode.exp as number*1000)
+            } )
             router.push(`/`)
             return true
         }).catch(resp => {
@@ -100,12 +121,14 @@ export default function AuthorizationProvider({ children }: Props) {
         removeTokenFromBaseUrl()
         const user: User = {
             username: "",
+            name:"",
             token: "",
             auth: false,role:"USER"
         }
         setuser(user)
-        setAuth(false)
-        window.localStorage.setItem("Token", "")
+        setAuth(false) 
+        cookies.remove("_spring_jwt")
+        cookies.remove("name")
     }
     return (
         <AuthorizatioContext.Provider value={{ Auth, user, login, logout, itemInCart, setitemInCart,prefetchdata }}>

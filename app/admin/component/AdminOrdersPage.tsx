@@ -58,7 +58,12 @@ export default function AdminOrdersPage({ }: Props) {
                     router.push(path.toString() + "?" + param.toString())
                     setcurrentPage(0)
                     setstatus("ALL")
-                    adminApigetOrderById(Number(e.target.value)).then(resp => setdata(resp.data))
+                    if(e.target.value!==""){
+                      adminApigetOrderById(Number(e.target.value)).then(resp => setdata(resp.data))
+                    }
+                    else{
+                      loadPage()
+                    }
                   }} />
                   <Search className='m-2' />
                 </div>

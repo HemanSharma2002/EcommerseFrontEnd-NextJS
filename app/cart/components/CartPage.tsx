@@ -11,6 +11,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { red } from '@mui/material/colors'
 import useRazorpay, { RazorpayOptions } from "react-razorpay";
+import { tree } from 'next/dist/build/templates/app-page'
+import { Loader, Loader2 } from 'lucide-react'
 
 type Props = { updatable: boolean, component?: ReactElement, setStep: Function }
 
@@ -21,6 +23,7 @@ export default function CartPage({ updatable, component, setStep }: Props) {
   const [messge, setmessge] = useState(false)
   const [payment, setpayment] = useState<boolean>(true)
   const [paymentText, setpaymentText] = useState<String>("Online")
+  const [isPurchaseActive, setisPurchaseActive] = useState(false)
   function timeout() {
     setTimeout(() => setmessge(false), 3000)
   }
@@ -104,71 +107,76 @@ export default function CartPage({ updatable, component, setStep }: Props) {
                           </Select>
                         </FormControl>
                       </ThemeProvider>
-                      <Link href={`/`}>
-                        <Button sx={{ bgcolor: "#002D62", color: 'white', ":hover": { bgcolor: "#00308F" } }} onClick={async (e) => {
-                          e.preventDefault()
-                          const address = await getActiveAddress().then(resp => resp.data)
-                          const order: Order = await createOrder(payment, address).then(resp => resp.data).catch(resp => console.log(resp.data))
-                          if (payment) {
-                            const online = await initiateOnlinePayment(order.id).then(resp => resp.data).catch(resp => console.log(resp.data))
-                            const options: RazorpayOptions = {
-                              key: "rzp_test_pzyOMVPvo6O5Od",
-                              amount: String(order.totalDiscountedPrice * 100),
-                              currency: "INR",
-                              name: "Cloth store",
-                              description: "Test Transaction",
-                              image: "https://i.pinimg.com/550x/6a/c0/0a/6ac00ab8f4018bb2734d000072567b0f.jpg",
-                              // callback_url: `http://localhost:3000/user/order/completed/${order.id}`,
-                              // redirect: false,
-                              order_id: online,
-                              handler: function (response) {
-                                const rsep: PaymentDetail = {
-                                  razorpayId: response.razorpay_order_id,
-                                  razorpayPaymentId: response.razorpay_payment_id,
-                                  razorpayPaymentSignature: response.razorpay_signature
-                                }
-                                updateRazorpayPaymentInformation(order.id, rsep).then(response => alert("Response has been saved")).catch(response => console.log(response))
-                                setStep(order.id)
-                                console.log(response)
-                              },
-                              prefill: {
-                                name: order.shippingAddress.firstName + " " + order.shippingAddress.lastName,
-                                email: auth.user.username,
-                                contact: order.shippingAddress.mobile,
-                              },
-                              notes: {
-                                address: order.shippingAddress.streetAddress + "," + order.shippingAddress.city + "," + order.shippingAddress.state + " " + order.shippingAddress.pincode
-                              },
-                              theme: {
-                                color: "#002D62",
-                              },
-                            };
-                            console.log(options)
-                            const rzp1 = new Razorpay(options)
+                      <Button sx={{ bgcolor: "#002D62", color: 'white', ":hover": { bgcolor: "#00308F" } }} disabled={isPurchaseActive} onClick={async (e) => {
+                        e.preventDefault()
+                        setisPurchaseActive(true)
+                        const address = await getActiveAddress().then(resp => resp.data)
+                        const order: Order = await createOrder(payment, address).then(resp => resp.data).catch(resp => console.log(resp.data))
+                        if (payment) {
+                          const online = await initiateOnlinePayment(order.id).then(resp => resp.data).catch(resp => console.log(resp.data))
+                          const options: RazorpayOptions = {
+                            key: "rzp_test_pzyOMVPvo6O5Od",
+                            amount: String(order.totalDiscountedPrice * 100),
+                            currency: "INR",
+                            name: "Spring Store",
+                            description: "Test Transaction",
+                            image: "https://i.postimg.cc/MTF0TKYq/Spring-Store-Logo.png",
+                            // callback_url: `http://localhost:3000/user/order/completed/${order.id}`,
+                            // redirect: false,
+                            order_id: online,
+                            handler: function (response) {
+                              const rsep: PaymentDetail = {
+                                razorpayId: response.razorpay_order_id,
+                                razorpayPaymentId: response.razorpay_payment_id,
+                                razorpayPaymentSignature: response.razorpay_signature
+                              }
+                              updateRazorpayPaymentInformation(order.id, rsep).then(response => response).catch(response => console.log(response))
+                              setStep(order.id)
+                              console.log(response)
+                              router.push(`/user/order/completed/${order.id}`)
+                            },
+                            prefill: {
+                              name: order.shippingAddress.firstName + " " + order.shippingAddress.lastName,
+                              email: auth.user.username,
+                              contact: order.shippingAddress.mobile,
+                            },
+                            notes: {
+                              address: order.shippingAddress.streetAddress + "," + order.shippingAddress.city + "," + order.shippingAddress.state + " " + order.shippingAddress.pincode
+                            },
+                            theme: {
+                              color: "#002D62",
+                            },
+                          };
+                          console.log(options)
+                          const rzp1 = new Razorpay(options)
 
-                            rzp1.on("payment.failed", function (response:any) {
-                              alert(response.error.code);
-                              alert(response.error.description);
-                              alert(response.error.source);
-                              alert(response.error.step);
-                              alert(response.error.reason);
-                              alert(response.error.metadata.order_id);
-                              alert(response.error.metadata.payment_id);
-                            });
+                          rzp1.on("payment.failed", function (response: any) {
+                            alert(response.error.code);
+                            alert(response.error.description);
+                            alert(response.error.source);
+                            alert(response.error.step);
+                            alert(response.error.reason);
+                            alert(response.error.metadata.order_id);
+                            alert(response.error.metadata.payment_id);
+                          });
 
-                            rzp1.open();
-                          }
+                          rzp1.open();
+                        }
 
-                          else {
-                            router.push(`/user/order/completed/${order.id}`)
-                          }
-                          auth.setitemInCart(0)
-                        }}>Confirm Order</Button>
-                      </Link>
+                        else {
+                          router.push(`/user/order/completed/${order.id}`)
+                        }
+                        auth.setitemInCart(0)
+                      }}>Confirm Order {isPurchaseActive &&
+                        <div>
+                          <Loader2 className=' animate-spin text-white' />
+                        </div>
+                        }</Button>
+
                     </div>
                 }
                 <div>
-                  
+
                 </div>
                 {messge &&
                   <Alert className=' mt-5' icon={<Info fontSize="inherit" />} severity="info">

@@ -13,11 +13,16 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { LockIcon } from 'lucide-react';
+import { Loader2, LockIcon } from 'lucide-react';
 import { Label } from '@mui/icons-material';
 import { InputLabel } from '@mui/material';
 import { signUpApi } from '@/app/backendApiCalls/api';
 import { Auths, useAuth } from '@/app/auth/auth';
+import { ApiResponse } from '@/app/admin/Interfaces/Interfaces';
+import { useRouter } from 'next/navigation';
+import {  useToast } from '@/components/ui/use-toast';
+import { AxiosError } from 'axios';
+import { tree } from 'next/dist/build/templates/app-page';
 
 
 // TODO remove, this demo shouldn't need to reset the theme.
@@ -30,7 +35,9 @@ const defaultTheme = createTheme({
 });
 
 export default function SignUp() {
-    const auth:Auths=useAuth()
+    const router=useRouter()
+    const {toast}=useToast()
+    const auth: Auths = useAuth()
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -39,27 +46,60 @@ export default function SignUp() {
             lastName: data.get('lastName'),
             email: data.get('email'),
             password: data.get('password'),
-            mobile:data.get('mobile') ,
+            mobile: data.get('mobile'),
         }
-        
-        if(prop.password!==data.get('confirmPassword')){
+
+        if (prop.password !== data.get('confirmPassword')) {
             setmessage("Password do not matches")
             return
         }
-        setmessage("")
-        const resp=await signUpApi(prop)
-        if(resp.data==="sucess"){
-            const user={
-                email:prop.email,
-                password:prop.password
+        try {
+            setmessage("")
+            setisProcessingSignUp(true)
+            const resp:ApiResponse = await signUpApi(prop).then(resp=>resp.data)
+            console.log(resp);
+            
+            if(resp.success){
+                //toast
+                toast({
+                    title:"Signup Success . Verify",
+                    description:resp.message
+                })
+                router.push(`/user/authorization/verify/${resp.userId}`)
+            }else{
+                //toast
+                if(resp.userId){
+                    toast({
+                        title:"User exist",
+                        description:resp.message,
+                        variant:"destructive"
+                    })
+                    router.push(`/user/authorization/verify/${resp.userId}`)
+                }else{
+                    toast({
+                        title:"Sign up failed",
+                        description:resp.message,
+                        variant:"destructive"
+                    })
+                    //toast
+                }
             }
-            auth.login(user)
+        } catch (error) {
+            const resp= error as AxiosError<ApiResponse>
+            toast({
+                title:"Verification Failed",
+                description:resp.message,
+                variant:"destructive"
+            })
         }
-        setmessage(resp.data)
+        finally{
+            setisProcessingSignUp(false)
+        }
         console.log(prop);
     };
     const [show, setshow] = React.useState(false)
     const [message, setmessage] = React.useState<string>()
+    const [isProcessingSignUp, setisProcessingSignUp] = React.useState(false)
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -147,7 +187,7 @@ export default function SignUp() {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <InputLabel className='text-red-500'>{message}</InputLabel>
+                                <InputLabel className={`${message==="sucess"?" text-green-500":" text-red-500"}`}>{message}</InputLabel>
                             </Grid>
                             <Grid item xs={12}>
                                 <FormControlLabel
@@ -156,10 +196,16 @@ export default function SignUp() {
                                 />
                             </Grid>
                         </Grid>
+                        {isProcessingSignUp &&
+                            <div className=' flex flex-col items-center'>
+                                <Loader2 className=' animate-spin' />
+                            </div>
+                        }
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
+                            disabled={isProcessingSignUp}
                             sx={{
                                 mt: 3, mb: 2, bgcolor: "#002D62", ":hover": {
                                     bgcolor: "#00308F"
@@ -169,13 +215,14 @@ export default function SignUp() {
                             Sign Up
                         </Button>
                         <Grid container justifyContent="flex-end">
-                            <Grid item>
+                            <Grid item className=' pb-10'>
                                 <Link href={`/user/authorization/signin`} variant="body2">
                                     Already have an account? Sign in
                                 </Link>
                             </Grid>
                         </Grid>
                     </Box>
+                    
                 </Box>
             </Container>
         </ThemeProvider>

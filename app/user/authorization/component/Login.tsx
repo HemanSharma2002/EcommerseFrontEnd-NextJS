@@ -13,13 +13,14 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { LockIcon } from 'lucide-react';
+import { Loader2, LockIcon } from 'lucide-react';
 import axios from 'axios';
 import { headers } from 'next/headers';
 import { loginApi } from '@/app/backendApiCalls/api';
 import { addTokenToBaseUrl } from '@/app/backendApiCalls/ApiClient';
 import { Auths, useAuth } from '@/app/auth/auth';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/use-toast';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme({
@@ -33,8 +34,10 @@ const defaultTheme = createTheme({
 export default function Login() {
     const Auth:Auths=useAuth()
     const router=useRouter()
+    const{toast}=useToast()
     
     const [message, setmessage] = React.useState("")
+    const [isProcessingSignUp, setisProcessingSignUp] = React.useState(false)
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -43,7 +46,9 @@ export default function Login() {
             password: data.get('password'),
         }
         if(!Auth.login(prop)){
+            setisProcessingSignUp(true)
             setmessage("Invalid credentials *")
+            setisProcessingSignUp(false)
         }
 
     };
@@ -112,10 +117,16 @@ export default function Login() {
                                 control={<Checkbox onChange={(e) => setshow(!show)} value="remember" color="primary" />}
                                 label="Show Password"
                             />
+                            {isProcessingSignUp&&
+                            <div className=' flex flex-col items-center'>
+                                <Loader2 className=' animate-spin'/>
+                            </div>
+                            }
                             <Button
                                 type="submit"
                                 fullWidth
                                 variant="contained"
+                                disabled={isProcessingSignUp}
                                 sx={{
                                     mt: 3, mb: 2, bgcolor: "#002D62", ":hover": {
                                         bgcolor: "#00308F"

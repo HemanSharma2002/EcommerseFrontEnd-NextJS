@@ -4,6 +4,7 @@ import { Cart } from "../admin/Interfaces/Interfaces";
 
 export interface User{
     username:string,
+    name:string,
     role:string,
     token:string,
     auth:boolean
@@ -20,6 +21,7 @@ export const AuthorizatioContext=createContext<Auths>({
     logout:()=>{},
     user:{
         username:"",
+        name:"",
         role:"Admin",
         token:"",
         auth:true

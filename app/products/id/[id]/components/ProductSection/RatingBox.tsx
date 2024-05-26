@@ -1,7 +1,6 @@
 import { Avatar, Rating } from '@mui/material'
 import React from 'react'
-
-
+import dayjs from 'dayjs'
 
 interface Rating {
     id: Number,
@@ -24,7 +23,7 @@ export default function RatingBox({rating}: Props) {
                 <p className='py-2'>{rating.username}</p>
                 </div>
                 <div className='py-2'>
-                    {Date.now().toString()}
+                    {dayjs(rating.createdAt as string).format('MMM D, YYYY h:mm A')}
                 </div>
             </div>
             <div>

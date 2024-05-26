@@ -1,11 +1,11 @@
 "use client"
-import { Order, PaymentDetail} from '@/app/admin/Interfaces/Interfaces'
+import { Order, PaymentDetail, Ratting } from '@/app/admin/Interfaces/Interfaces'
 import { Auths, useAuth } from '@/app/auth/auth'
-import { getUserOrderById, initiateOnlinePayment, updateRazorpayPaymentInformation } from '@/app/backendApiCalls/api'
+import { addReviewToTheProduct, getUserOrderById, initiateOnlinePayment, updateRazorpayPaymentInformation } from '@/app/backendApiCalls/api'
 import AddressCard from '@/app/cart/checkout/component/AddressCard'
 import CartCard from '@/app/cart/components/CartCard'
 import { ArrowForward } from '@mui/icons-material'
-import { Button, CircularProgress, dividerClasses, Step, StepConnector, stepConnectorClasses, StepIconProps, StepLabel, Stepper, styled } from '@mui/material'
+import { Button, CircularProgress, dividerClasses, Rating, Step, StepConnector, stepConnectorClasses, StepIconProps, StepLabel, Stepper, styled } from '@mui/material'
 import { Box, Check } from 'lucide-react'
 import { tree } from 'next/dist/build/templates/app-page'
 import Link from 'next/link'
@@ -76,15 +76,14 @@ function QontoStepIcon(props: StepIconProps) {
 type Props = { step: number, checkout: boolean }
 
 export default function OrderPage({ step, checkout }: Props) {
-
-  console.log(step)
   const { orderId } = useParams()
   const [order, setorder] = useState<Order>()
   const [viewDetails, setviewDetails] = useState(false)
   const [steper, setsteper] = useState(1)
   const [Razorpay] = useRazorpay()
   const auth: Auths = useAuth()
-
+  const [ratting, setratting] = useState(0)
+  const [review, setreview] = useState("")
   const router = useRouter()
   if (!auth.Auth) {
     auth.setitemInCart(0)
@@ -128,7 +127,7 @@ export default function OrderPage({ step, checkout }: Props) {
     <div className=' w-full min-h-screen '>
       {order ? <div className=' text-blue-950 p-4 duration-300 flex flex-col gap-2 w-full'>
         <div className=' flex flex-row justify-center w-full'>
-          {!checkout && <div className='  py-8  w-5/6'>
+          {(!checkout&&order.orderStatus!=="CANCELLED" &&order.orderStatus!=="RETURNED") && <div className='  py-8  w-5/6'>
             <Stepper activeStep={steper} alternativeLabel connector={<QontoConnector />}>
               <Step>
                 <StepLabel StepIconComponent={QontoStepIcon}>Pending</StepLabel>
@@ -165,9 +164,9 @@ export default function OrderPage({ step, checkout }: Props) {
                   key: "rzp_test_pzyOMVPvo6O5Od",
                   amount: String(order.totalDiscountedPrice * 100),
                   currency: "INR",
-                  name: "Cloth store",
+                  name: "Spring Store",
                   description: "Test Transaction",
-                  image: "https://i.pinimg.com/550x/6a/c0/0a/6ac00ab8f4018bb2734d000072567b0f.jpg",
+                  image: "https://i.postimg.cc/MTF0TKYq/Spring-Store-Logo.png",
                   // callback_url: `http://localhost:3000/user/order/completed/${order.id}`,
                   // redirect: false,
                   order_id: online,
@@ -195,7 +194,7 @@ export default function OrderPage({ step, checkout }: Props) {
                 console.log(options)
                 const rzp1 = new Razorpay(options)
 
-                rzp1.on("payment.failed", function (response:any) {
+                rzp1.on("payment.failed", function (response: any) {
                   alert(response.error.code);
                   alert(response.error.description);
                   alert(response.error.source);
@@ -239,8 +238,37 @@ export default function OrderPage({ step, checkout }: Props) {
           <div className=' flex flex-col gap-3'>
             {
               order.orderItems.map(item => (
-                <div key={item.id}>
-                  <CartCard cartItem={item} updatable={false}  loadpage={loadPage} />
+                <div key={item.id} >
+                  <CartCard cartItem={item} updatable={false} loadpage={loadPage} />
+                  {(order.orderStatus === "DELIVERED" && !item.reviewed) && <div>
+                    <div className=' flex flex-col p-4 gap-2 '>
+                      <Rating
+                        sx={{ color: "#002D62" }}
+                        size='large'
+                        name="simple-controlled"
+                        value={ratting}
+                        onChange={(event, newValue) => {
+                          console.log(newValue);
+                          
+                          setratting(newValue as number);
+                        }}
+                      />
+                      <input className=' py-2 p-2 rounded-md border-2 border-slate-300' type="text" placeholder='Review' value={review} onChange={e => setreview(e.target.value)} />
+                      <div>
+                        <Button sx={{ bgcolor: "#002D62", color: 'white', ":hover": { bgcolor: "#002D62" } }} onClick={async (e)=>{
+                          e.preventDefault()
+                          const rating:Ratting={
+                            rating:ratting,
+                            review
+                          }
+                          await addReviewToTheProduct(item.product.id as number,item.id,rating).then(resp=>console.log(resp)).catch(resp=>console.log(resp))
+                          loadPage()
+                        }}>
+                          Submit
+                        </Button>
+                      </div>
+                    </div>
+                  </div>}
                 </div>
               ))
             }

@@ -16,7 +16,7 @@ export default function OrderCard({ order, loadPage, admin }: Props) {
     }
     return (
         <div  >
-            <div className=' border-2 border-blue-950 shadow-md w-full h-full text-blue-950 rounded-md'>
+            <div className=' border-2 border-blue-950 shadow-md w-full h-full p-3 text-blue-950 rounded-md'>
                 <div className=' flex flex-row gap-3'>
                     <div>
                         <div className=' flex flex-row'>
@@ -44,9 +44,9 @@ export default function OrderCard({ order, loadPage, admin }: Props) {
                                                         key: "rzp_test_pzyOMVPvo6O5Od",
                                                         amount: String(order.totalDiscountedPrice * 100),
                                                         currency: "INR",
-                                                        name: "Cloth store",
+                                                        name: "Spring Store",
                                                         description: "Test Transaction",
-                                                        image: "https://i.pinimg.com/550x/6a/c0/0a/6ac00ab8f4018bb2734d000072567b0f.jpg",
+                                                        image: "https://i.postimg.cc/MTF0TKYq/Spring-Store-Logo.png",
                                                         // callback_url: `http://localhost:3000/user/order/completed/${order.id}`,
                                                         // redirect: false,
                                                         order_id: online,

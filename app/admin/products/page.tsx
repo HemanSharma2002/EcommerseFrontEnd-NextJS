@@ -2,8 +2,10 @@ import React from 'react'
 
 type Props = {}
 
-export default function page({}: Props) {
+export default function AdminProduct({ }: Props) {
   return (
-    <div>page</div>
+    <div className=' flex items-center justify-center text-7xl h-full'>
+      Admin Products
+    </div>
   )
 }

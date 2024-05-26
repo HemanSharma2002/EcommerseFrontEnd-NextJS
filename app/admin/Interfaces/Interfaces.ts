@@ -80,7 +80,8 @@ export interface OrderItem {
     userId: number,
     deliveryDate: Date,
     product: Product,
-    totalDiscount:number
+    totalDiscount:number,
+    reviewed:boolean
 
 }
 export interface Order {
@@ -106,8 +107,21 @@ export interface PaymentDetail {
     razorpayPaymentSignature: string
     razorpayPaymentId: string
 }
+export interface Ratting{
+    rating:number,
+    review:string
+}
 
-
+export interface Page {
+    content: Product[]
+    , totalPages: number
+    ,totalElements:number
+  }
+  export interface ApiResponse{
+    success:boolean,
+    message:string,
+    userId:number
+  }
 export const defaultTheme = createTheme({
     typography: {
         fontFamily: [

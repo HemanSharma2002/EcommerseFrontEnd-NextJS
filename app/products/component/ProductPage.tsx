@@ -44,7 +44,7 @@ export default function ProductPage({ }: Props) {
   const [sort, setsort] = useState("price_low")
   useEffect(() => loadPage(), [sort, color.length, pattern.length])
 
-  function loadPage() {
+  function loadPage(page?:string) {
     const obj = {
       sort: sort,
       colors: color,
@@ -52,7 +52,7 @@ export default function ProductPage({ }: Props) {
     }
     console.log(obj)
     if (param?.top && param?.second && param?.third) {
-      getProductsByThirdLevelCategory(param, obj, currentPage - 1).then(resp => {
+      getProductsByThirdLevelCategory(param, obj, page||currentPage - 1).then(resp => {
         setpage(resp.data)
         console.log(resp.data)
         settotalPage(resp.data.totalPages)
@@ -60,7 +60,7 @@ export default function ProductPage({ }: Props) {
       console.log("third")
     }
     else if (param?.top && param?.second) {
-      getProductsBySecondLevelCategory(param, obj, currentPage - 1).then(resp => {
+      getProductsBySecondLevelCategory(param, obj,page|| currentPage - 1).then(resp => {
         setpage(resp.data)
         console.log(resp.data)
         settotalPage(resp.data.totalPages)
@@ -68,7 +68,7 @@ export default function ProductPage({ }: Props) {
       console.log("second")
     }
     else {
-      getProductsByTopLevelCategory(param, obj, currentPage - 1).then(resp => {
+      getProductsByTopLevelCategory(param, obj,page|| currentPage - 1).then(resp => {
         setpage(resp.data)
         console.log(resp.data)
         settotalPage(resp.data.totalPages)
@@ -166,6 +166,13 @@ export default function ProductPage({ }: Props) {
                         }
                         setcolor([...color, "Grey"])
                       }} />} label="Grey" />
+                      <FormControlLabel control={<Checkbox onChange={e => {
+                        if (color.some(s => s == "Green")) {
+                          setcolor(color.filter(c => c != "Green"))
+                          return
+                        }
+                        setcolor([...color, "Green"])
+                      }} />} label="Green" />
                     </FormGroup>
                   </AccordionDetails>
                 </Accordion>
@@ -224,7 +231,7 @@ export default function ProductPage({ }: Props) {
               
 
             </div>}
-            <div className=' absolute bottom-4 left-96 right-96'>
+            {totalPage!=1&&<div className='  bottom-4 left-96 right-96'>
               <Pagination>
                 <PaginationContent className='gap-4'>
                   {currentPage != 1 && <PaginationItem>
@@ -233,6 +240,7 @@ export default function ProductPage({ }: Props) {
                         return
                       }
                       setcurrentPage(currentPage - 1)
+                      loadPage(String(currentPage - 2))
                     }} />
                   </PaginationItem>}
                   <PaginationItem>
@@ -245,13 +253,14 @@ export default function ProductPage({ }: Props) {
                         return
                       }
                       setcurrentPage(currentPage + 1)
+                      loadPage(String(currentPage))
                     }} />
                   </PaginationItem>}
                 </PaginationContent>
 
               </Pagination>
 
-            </div>
+            </div>}
           </div>
         </div>
       </div>

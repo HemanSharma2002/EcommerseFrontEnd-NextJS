@@ -6,8 +6,12 @@ import { log } from 'console'
 import { BoxIcon } from 'lucide-react'
 import React, { useRef, useState } from 'react'
 import { nanoid } from 'nanoid'
+import { Product } from '../../Interfaces/Interfaces'
+import { useRouter } from 'next/navigation'
 //@author Heman Sharma
-type Props = {}
+type Props = {
+    product?:Product
+}
 interface Size {
     name: String,
     quantity: number
@@ -40,7 +44,8 @@ const defaultTheme = createTheme({
     }
 });
 
-export default function AddProductPage ({ }: Props) {
+export default function AddProductPage ({ product}: Props) {
+    const router=useRouter()
     const [title, settitle] = useState("")
     const [brand, setbrand] = useState("")
     const [price, setprice] = useState("")
@@ -101,6 +106,7 @@ export default function AddProductPage ({ }: Props) {
                             <MenuItem value="Blue" >Blue</MenuItem>
                             <MenuItem value="Red" >Red</MenuItem>
                             <MenuItem value="Grey" >Grey</MenuItem>
+                            <MenuItem value="Green" >Green</MenuItem>
                         </Select>
                     </FormControl>
                     <div className=' flex flex-col gap-6'>
@@ -288,8 +294,10 @@ export default function AddProductPage ({ }: Props) {
                                 quantity
                             }
 
-                            await axios.post(`http://localhost:8085/api/products/add`, product).then(resp => console.log(resp)).catch(resp => console.log(resp))
-
+                            await axios.post(`http://localhost:8085/api/products/add`, product).then(resp => {
+                                console.log(resp)
+                                router.push(`/admin/addproduct/product/${resp.data.id}`)
+                            }).catch(resp => console.log(resp))
                         }
                         catch (erro) {
                             console.log(erro)
