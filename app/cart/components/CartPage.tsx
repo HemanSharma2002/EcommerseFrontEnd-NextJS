@@ -112,10 +112,14 @@ export default function CartPage({ updatable, component, setStep }: Props) {
                         setisPurchaseActive(true)
                         const address = await getActiveAddress().then(resp => resp.data)
                         const order: Order = await createOrder(payment, address).then(resp => resp.data).catch(resp => console.log(resp.data))
+                        console.log(order);
+                        
                         if (payment) {
                           const online = await initiateOnlinePayment(order.id).then(resp => resp.data).catch(resp => console.log(resp.data))
+                          console.log(online);
+                          
                           const options: RazorpayOptions = {
-                            key: "rzp_test_pzyOMVPvo6O5Od",
+                            key: "rzp_test_DdauDBStpb06aT",
                             amount: String(order.totalDiscountedPrice * 100),
                             currency: "INR",
                             name: "Spring Store",
@@ -124,6 +128,7 @@ export default function CartPage({ updatable, component, setStep }: Props) {
                             // callback_url: `http://localhost:3000/user/order/completed/${order.id}`,
                             // redirect: false,
                             order_id: online,
+                            allow_rotation:false,
                             handler: function (response) {
                               const rsep: PaymentDetail = {
                                 razorpayId: response.razorpay_order_id,

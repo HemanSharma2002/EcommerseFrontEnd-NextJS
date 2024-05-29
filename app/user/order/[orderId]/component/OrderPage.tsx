@@ -161,7 +161,7 @@ export default function OrderPage({ step, checkout }: Props) {
                 e.preventDefault()
                 const online = await initiateOnlinePayment(order.id).then(resp => resp.data).catch(resp => console.log(resp.data))
                 const options: RazorpayOptions = {
-                  key: "rzp_test_pzyOMVPvo6O5Od",
+                  key: "rzp_test_DdauDBStpb06aT",
                   amount: String(order.totalDiscountedPrice * 100),
                   currency: "INR",
                   name: "Spring Store",
