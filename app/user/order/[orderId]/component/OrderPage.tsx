@@ -6,7 +6,7 @@ import AddressCard from '@/app/cart/checkout/component/AddressCard'
 import CartCard from '@/app/cart/components/CartCard'
 import { ArrowForward } from '@mui/icons-material'
 import { Button, CircularProgress, dividerClasses, Rating, Step, StepConnector, stepConnectorClasses, StepIconProps, StepLabel, Stepper, styled } from '@mui/material'
-import { Box, Check } from 'lucide-react'
+import { Box, Check, Loader2 } from 'lucide-react'
 import { tree } from 'next/dist/build/templates/app-page'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
@@ -123,6 +123,7 @@ export default function OrderPage({ step, checkout }: Props) {
     )
     console.log(orderId)
   }
+  const [loadpayment, setloadpayment] = useState(false)
   return (
     <div className=' w-full min-h-screen '>
       {order ? <div className=' text-blue-950 p-4 duration-300 flex flex-col gap-2 w-full'>
@@ -157,9 +158,13 @@ export default function OrderPage({ step, checkout }: Props) {
         <div>
           {!checkout && <div className=' flex flex-col items-end w-full'>
             <div>
-              {order.orderStatus === "PENDING" && <Button className=' px-3 py-1 ' sx={{ bgcolor: "#002D62", color: 'white', ":hover": { bgcolor: "#002D62" } }} onClick={async (e) => {
+              {order.orderStatus === "PENDING" && <Button disabled={loadpayment} className=' flex gap-2 px-3 py-1 ' sx={{ bgcolor: "#002D62", color: 'white', ":hover": { bgcolor: "#002D62" } }} onClick={async (e) => {
                 e.preventDefault()
-                const online = await initiateOnlinePayment(order.id).then(resp => resp.data).catch(resp => console.log(resp.data))
+                try {
+                  setloadpayment(true)
+                  const online = await initiateOnlinePayment(order.id).then(resp => resp.data).catch(resp => console.log(resp.data))
+                console.log(online);
+                
                 const options: RazorpayOptions = {
                   key: "rzp_test_DdauDBStpb06aT",
                   amount: String(order.totalDiscountedPrice * 100),
@@ -205,7 +210,13 @@ export default function OrderPage({ step, checkout }: Props) {
                 });
 
                 rzp1.open();
-              }}>Complete your Payment</Button>}
+                } catch (error) {
+                  console.error(error);
+                  
+                }finally{
+                  setloadpayment(false)
+                }
+              }}>Complete your Payment {loadpayment&&<Loader2 className=' animate-spin text-white'/>}</Button>}
             </div>
           </div>}
         </div>

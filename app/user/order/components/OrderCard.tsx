@@ -2,14 +2,16 @@ import { defaultTheme, Order, PaymentDetail } from '@/app/admin/Interfaces/Inter
 import { Auths, useAuth } from '@/app/auth/auth'
 import { adminApiupdateOrderStatus, initiateOnlinePayment, updateRazorpayPaymentInformation } from '@/app/backendApiCalls/api'
 import { Button, FormControl, InputLabel, MenuItem, Select, ThemeProvider } from '@mui/material'
+import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
 import useRazorpay, { RazorpayOptions } from 'react-razorpay'
 
 type Props = { order: Order, loadPage: Function, admin: boolean }
 
 export default function OrderCard({ order, loadPage, admin }: Props) {
     const [Razorpay] = useRazorpay()
+    const [loadpayment, setloadpayment] = useState(false)
     const auth: Auths = useAuth()
     function load() {
         setTimeout(() => loadPage(), 1000)
@@ -37,18 +39,16 @@ export default function OrderCard({ order, loadPage, admin }: Props) {
                                             ?
                                             <div className=' flex flex-col gap-2'>
                                                 <p>Status : {order.orderStatus}</p>
-                                                <Button className=' px-3 py-1 ' sx={{ bgcolor: "#002D62", color: 'white', ":hover": { bgcolor: "#002D62" } }} onClick={async (e) => {
+                                                <Button disabled={loadpayment} className=' px-3 py-1 ' sx={{ bgcolor: "#002D62", color: 'white', ":hover": { bgcolor: "#002D62" } }} onClick={async (e) => {
                                                     e.preventDefault()
                                                     console.log("razorpay");
                                                     
-                                                    const online = await initiateOnlinePayment(order.id).then(resp => {
-                                                        console.log(resp);
-                                                        return resp.data
-                                                        
-                                                    }).catch(resp => console.log(resp.data))
-                                                    console.log(online);
-                                                    
-                                                    const options: RazorpayOptions = {
+                                                    try {
+                                                        setloadpayment(true)
+                                                        const online = await initiateOnlinePayment(order.id).then(resp => resp.data).catch(resp => console.log(resp.data))
+                                                      console.log(online);
+                                                      
+                                                      const options: RazorpayOptions = {
                                                         key: "rzp_test_DdauDBStpb06aT",
                                                         amount: String(order.totalDiscountedPrice * 100),
                                                         currency: "INR",
@@ -59,32 +59,30 @@ export default function OrderCard({ order, loadPage, admin }: Props) {
                                                         // redirect: false,
                                                         order_id: online,
                                                         handler: function (response) {
-                                                            const rsep: PaymentDetail = {
-                                                                razorpayId: response.razorpay_order_id,
-                                                                razorpayPaymentId: response.razorpay_payment_id,
-                                                                razorpayPaymentSignature: response.razorpay_signature
-                                                            }
-                                                            updateRazorpayPaymentInformation(order.id, rsep).then(response => alert("Response has been saved")).catch(response => console.log(response))
-                                                            load()
+                                                          const rsep: PaymentDetail = {
+                                                            razorpayId: response.razorpay_order_id,
+                                                            razorpayPaymentId: response.razorpay_payment_id,
+                                                            razorpayPaymentSignature: response.razorpay_signature
+                                                          }
+                                                          updateRazorpayPaymentInformation(order.id, rsep).then(response => alert("Response has been saved")).catch(response => console.log(response))
+                                                          setTimeout(() => loadPage(), 500)
                                                         },
                                                         prefill: {
-                                                            name: order.shippingAddress.firstName + " " + order.shippingAddress.lastName,
-                                                            email: auth.user.username,
-                                                            contact: order.shippingAddress.mobile,
+                                                          name: order.shippingAddress.firstName + " " + order.shippingAddress.lastName,
+                                                          email: auth.user.username,
+                                                          contact: order.shippingAddress.mobile,
                                                         },
                                                         notes: {
-                                                            address: order.shippingAddress.streetAddress + "," + order.shippingAddress.city + "," + order.shippingAddress.state + " " + order.shippingAddress.pincode
+                                                          address: order.shippingAddress.streetAddress + "," + order.shippingAddress.city + "," + order.shippingAddress.state + " " + order.shippingAddress.pincode
                                                         },
                                                         theme: {
-                                                            color: "#002D62",
+                                                          color: "#002D62",
                                                         },
-                                                    };
-                                                    console.log(options)
-                                                    console.log("rp");
-                                                    
-                                                    const rzp1 = new Razorpay(options)
-
-                                                    rzp1.on("payment.failed", function (response:any) {
+                                                      };
+                                                      console.log(options)
+                                                      const rzp1 = new Razorpay(options)
+                                      
+                                                      rzp1.on("payment.failed", function (response: any) {
                                                         alert(response.error.code);
                                                         alert(response.error.description);
                                                         alert(response.error.source);
@@ -92,10 +90,16 @@ export default function OrderCard({ order, loadPage, admin }: Props) {
                                                         alert(response.error.reason);
                                                         alert(response.error.metadata.order_id);
                                                         alert(response.error.metadata.payment_id);
-                                                    });
-
-                                                    rzp1.open();
-                                                }}>Pay Now</Button>
+                                                      });
+                                      
+                                                      rzp1.open();
+                                                      } catch (error) {
+                                                        console.error(error);
+                                                        
+                                                      }finally{
+                                                        setloadpayment(false)
+                                                      }
+                                                }}>Pay Now {loadpayment&&<Loader2 className=' animate-spin'/>}</Button>
                                             </div>
                                             :
                                             <p>Status : {order.orderStatus}</p>
