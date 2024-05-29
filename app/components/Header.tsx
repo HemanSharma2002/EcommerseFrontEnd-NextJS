@@ -11,6 +11,12 @@ import {
     navigationMenuTriggerStyle,
     NavigationMenuViewport,
 } from "@/components/ui/navigation-menu"
+import {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
+  } from "@/components/ui/hover-card"
+  
 import axios from 'axios'
 import { LocalMall, Search, ShoppingBagRounded } from '@mui/icons-material'
 import Link from 'next/link'
@@ -123,36 +129,36 @@ export default function Header({ }: Props) {
                                 <input type="text" className='p-2 bg-blue-950 pl-5 rounded-2xl' value={search} placeholder='Search ' onChange={(e) => setsearch(e.target.value as string)} />
                                 <Search className='m-2' />
                             </div>
-                            {auth.Auth && <DropdownMenu>
-                                <DropdownMenuTrigger>
+                            {auth.Auth && <HoverCard >
+                                <HoverCardTrigger>
                                     <Avatar src={generator.generateRandomAvatar("avatar")} />
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent className=' text-blue-950'>
+                                </HoverCardTrigger>
+                                <HoverCardContent className=' text-blue-950 text-sm'>
                                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                     <DropdownMenuSeparator className=' bg-black' />
                                     <DropdownMenuLabel>User Info</DropdownMenuLabel>
 
-                                    <DropdownMenuItem className=' flex flex-col items-start'>
+                                    <div className=' flex flex-col items-start'>
                                         <DropdownMenuLabel >Name</DropdownMenuLabel>
                                         <p>{auth.user.name}</p>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className=' flex flex-col items-start'>
+                                    </div>
+                                    <div className=' flex flex-col items-start'>
                                         <DropdownMenuLabel>Email</DropdownMenuLabel>
                                         <p>{auth.user.username}</p>
-                                    </DropdownMenuItem>
+                                    </div>
                                     <DropdownMenuSeparator className=' bg-black' />
-                                    <DropdownMenuItem>
+                                    <div>
                                         <Link href={`/user/order`}>
                                             Orders
                                         </Link>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem>
+                                    </div>
+                                    <div>
                                         <button onClick={() => auth.logout()}>
                                             Sign Out
                                         </button>
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>}
+                                    </div>
+                                </HoverCardContent>
+                            </HoverCard>}
                             <Link href={`/cart`} className=' flex flex-row gap-2 '>
                                 <div className=' border-2 rounded-full p-1 border-blue-950 hover:bg-blue-950 group hover:text-white'><LocalMall className='text-blue-950 group-hover:text-white' /></div>
                                 <p className=' '>{auth.itemInCart}</p>
